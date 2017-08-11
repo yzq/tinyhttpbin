@@ -1,5 +1,6 @@
 import os
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, make_response, url_for
+from werkzeug.utils import redirect
 
 from helper import multidict_to_dict
 
@@ -39,6 +40,30 @@ def view_get():
     print type(args)
     print args
     return jsonify({'headers': dict(headers), 'url': url, 'args': args})
+
+
+@app.route('/cookie/set/<name>/<value>')
+def set_cookie(name, value):
+    r = make_response(redirect(url_for('view_cookies')))
+    r.set_cookie(key=name, value=value)
+    return r
+
+
+@app.route('/cookies/set')
+def set_cookies():
+    cookies = dict(request.args.items())
+    r = make_response(redirect(url_for('view_cookies')))
+    for k, v in cookies.items():
+        r.set_cookie(key=k, value=v)
+
+    return r
+
+
+@app.route('/cookies')
+def view_cookies():
+    cookies = dict(request.cookies.items())
+    return jsonify(cookies=cookies)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -9,6 +9,8 @@
 <li><a href="{{ url_for('view_user_agent') }}" data-bare-link="true"><code>/user-agent</code></a> Returns user-agent.</li>
 <li><a href="{{ url_for('view_headers') }}" data-bare-link="true"><code>/headers</code></a> Returns header dict.</li>
 <li><a href="{{ url_for('view_get') }}" data-bare-link="true"><code>/get</code></a> Returns GET data</li>
+<li><a href="{{ url_for('set_cookie', name='yzq', value='123') }}"><code>/cookie/set?name=value</code></a> Sets a simple cookie.</li>
+<li><a href="{{ url_for('set_cookies') }}"><code>/cookies/set</code></a> Sets one or more cookies.</li>
 
 </body>
 </html>
