@@ -13,6 +13,7 @@
 <li><a href="{{ url_for('set_cookies') }}"><code>/cookies/set</code></a> Sets one or more cookies.</li>
 <li><a href="{{ url_for('response_headers',  **{'Content-Type': 'text/plain; charset=UTF-8', 'Server': 'httpbin'}) }}"  data-bare-link="true"><code>/response-headers</code></a> Return a set of response headers from the query string.</li>
 <li><a href="{{ url_for('redirect_to', url='http://www.sina.com') }}"><code>/redirect-to</code></a>  302 Redirects to the URL.</li>
+<li><a href="{{ url_for('delay_response', delay=3) }}"><code>/delay/:n</code></a> Delays responding for <em>min(n, 10)</em> seconds.</li>
 
 </body>
 </html>

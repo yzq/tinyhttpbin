@@ -1,4 +1,6 @@
 import os
+
+import time
 from flask import Flask, request, jsonify, render_template, make_response, url_for
 from werkzeug.utils import redirect
 
@@ -77,6 +79,15 @@ def response_headers():
 def redirect_to():
     location = request.args['url']
     return make_response(redirect(location))
+
+
+@app.route('/delay/<delay>')
+def delay_response(delay):
+    delay = min(float(delay), 10)
+    time.sleep(delay)
+    headers = request.headers.items()
+    return jsonify({'headers': dict(headers)})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
