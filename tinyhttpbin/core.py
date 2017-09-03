@@ -65,5 +65,18 @@ def view_cookies():
     return jsonify(cookies=cookies)
 
 
+@app.route('/response-headers', methods=['GET', 'POST'])
+def response_headers():
+    args = multidict_to_dict(request.args)
+    print args
+    j = jsonify({'headers': args})
+    return j
+
+
+@app.route('/redirect-to', methods=['GET', 'POST'])
+def redirect_to():
+    location = request.args['url']
+    return make_response(redirect(location))
+
 if __name__ == '__main__':
     app.run(debug=True)
