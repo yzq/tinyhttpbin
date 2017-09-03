@@ -1,7 +1,7 @@
 import os
 
 import time
-from flask import Flask, request, jsonify, render_template, make_response, url_for
+from flask import Flask, request, jsonify, render_template, make_response, url_for, Response
 from werkzeug.utils import redirect
 
 from helper import multidict_to_dict
@@ -87,6 +87,17 @@ def delay_response(delay):
     time.sleep(delay)
     headers = request.headers.items()
     return jsonify({'headers': dict(headers)})
+
+
+@app.route('/image/jpeg')
+def image_jpeg():
+    data = resource('images/jackal.jpg')
+    return Response(data, headers={'Content-Type': 'image/jpeg'})
+
+
+def resource(filename):
+    path = os.path.join(tmpl_dir, filename)
+    return open(path, 'rb').read()
 
 
 if __name__ == '__main__':
