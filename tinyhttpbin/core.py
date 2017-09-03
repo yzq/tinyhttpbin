@@ -100,5 +100,11 @@ def resource(filename):
     return open(path, 'rb').read()
 
 
+@app.route('/xml')
+def xml():
+    data = resource('sample.xml')
+    return Response(data, headers={'Content-Type': 'application/xml'})
+
+
 if __name__ == '__main__':
     app.run(debug=True)
