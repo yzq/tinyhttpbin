@@ -1,3 +1,7 @@
+ROBOT_TXT = """User-agent: *
+Disallow: /deny
+"""
+
 def multidict_to_dict(md):
     if md:
         dict = md.to_dict(flat=False)

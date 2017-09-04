@@ -4,7 +4,7 @@ import time
 from flask import Flask, request, jsonify, render_template, make_response, url_for, Response
 from werkzeug.utils import redirect
 
-from helper import multidict_to_dict
+from helper import multidict_to_dict, ROBOT_TXT
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -104,6 +104,15 @@ def resource(filename):
 def xml():
     data = resource('sample.xml')
     return Response(data, headers={'Content-Type': 'application/xml'})
+
+
+@app.route('/robot.txt')
+def view_robot_page():
+    response = make_response()
+    response.data = ROBOT_TXT
+    # response.content_type = 'text/plain'
+    response.headers['Content-Type'] = 'text/plain'
+    return response
 
 
 if __name__ == '__main__':
