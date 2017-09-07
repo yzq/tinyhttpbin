@@ -17,5 +17,7 @@
 <li><a href="{{ url_for('image_jpeg') }}"><code>/images/jpeg</code></a> Return a jpeg image.</li>
 <li><a href="{{ url_for('xml') }}"><code>/xml</code></a> Return a xml file.</li>
 <li><a href="{{ url_for('view_robot_page') }}"><code>/robot.txt</code></a> Returns some robots.txt rules.</li>
+<li><a href="{{ url_for('view_cache') }}"><code>/cache</code></a> Returns 200 unless an If-Modified-Since or If-None-Match header is provided, when it returns a 304..</li>
+
 </body>
 </html>

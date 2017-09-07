@@ -1,7 +1,10 @@
 import os
 
 import time
+import uuid
+
 from flask import Flask, request, jsonify, render_template, make_response, url_for, Response
+from werkzeug.http import http_date
 from werkzeug.utils import redirect
 
 from helper import multidict_to_dict, ROBOT_TXT
@@ -112,6 +115,20 @@ def view_robot_page():
     response.data = ROBOT_TXT
     # response.content_type = 'text/plain'
     response.headers['Content-Type'] = 'text/plain'
+    return response
+
+
+@app.route('/cache', methods=('GET',))
+def view_cache():
+    is_conditional = request.headers.get('If-Modified-Since') or request.headers.get('If-None-Match')
+    response = make_response()
+    print response.headers.__class__.__name__
+    if not is_conditional:
+        response.headers['Last-Modified'] = http_date()
+        response.headers['Etag'] = uuid.uuid4().hex
+    else:
+        response.status_code = 304
+
     return response
 
 
