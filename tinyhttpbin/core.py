@@ -132,5 +132,12 @@ def view_cache():
     return response
 
 
+@app.route('/cache/<int:value>', methods=('GET',))
+def cache_control(value):
+    response = make_response()
+    response.headers['Cache-Control'] = 'max-age={0}'.format(value)
+    return response
+
+
 if __name__ == '__main__':
     app.run(debug=True)
