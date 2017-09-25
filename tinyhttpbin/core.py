@@ -3,11 +3,19 @@ import os
 import time
 import uuid
 
-from flask import Flask, request, jsonify, render_template, make_response, url_for, Response
+from flask import Flask, request, jsonify, render_template, make_response, url_for, Response, jsonify as flask_jsonify
 from werkzeug.http import http_date
 from werkzeug.utils import redirect
 
-from helper import multidict_to_dict, ROBOT_TXT
+from helper import multidict_to_dict, ROBOT_TXT, ANGRY_ASCII, get_headers
+
+
+def jsonify(*args, **kwargs):
+    response = flask_jsonify(*args, **kwargs)
+    if not response.data.endswith(b'\n'):
+        response.data += b'\n'
+    return response
+
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -18,17 +26,38 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/robot.txt')
+def view_robot_page():
+    response = make_response()
+    response.data = ROBOT_TXT
+    # response.content_type = 'text/plain'
+    response.headers['Content-Type'] = 'text/plain'
+    return response
+
+
+@app.route('/deny')
+def view_deny_page():
+    response = make_response()
+    response.data = ANGRY_ASCII
+    response.content_type = 'text/plain'
+    return response
+
+
+@app.route('/ip')
+def view_origin():
+    """Returns Origin IP."""
+
+    return jsonify(origin=request.headers.get('X-Forwarded-For', request.remote_addr))
+
+
 @app.route('/user-agent')
 def view_user_agent():
-    user_agent = request.headers.get('User-Agent')
-    print type(request)
-    print "__dict__:"
-    print request.headers.__dict__
-    print "items():"
-    print request.headers.items()
-    print "request"
-    print request.__dict__
-    return jsonify({'user-agent': user_agent})
+    """Returns User-Agent"""
+
+    headers = get_headers()
+    return jsonify({'user-agent': headers['user-agent']})
+    # user_agent = request.headers.get('User-Agent')
+    # return jsonify({'user-agent': user_agent})
 
 
 @app.route('/headers')
@@ -107,15 +136,6 @@ def resource(filename):
 def xml():
     data = resource('sample.xml')
     return Response(data, headers={'Content-Type': 'application/xml'})
-
-
-@app.route('/robot.txt')
-def view_robot_page():
-    response = make_response()
-    response.data = ROBOT_TXT
-    # response.content_type = 'text/plain'
-    response.headers['Content-Type'] = 'text/plain'
-    return response
 
 
 @app.route('/cache', methods=('GET',))
